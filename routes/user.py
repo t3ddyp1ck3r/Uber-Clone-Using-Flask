@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.sqlite_operations import add_user, get_user_by_username, update_user_email, delete_user
+from flask import session
 
 user_bp = Blueprint('user', __name__)
 
@@ -37,3 +38,12 @@ def delete_user_endpoint():
     data = request.json
     delete_user(data['username'])  # Delete the user using the operation function
     return jsonify({"message": f"User {data['username']} deleted successfully!"})
+
+@user_bp.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    user = get_user_by_username(data['username'])
+    if user and user[3] == data['password']:
+        session['user_id'] = user[0]
+        return jsonify({"message": "Login successful!"})
+    return jsonify({"message": "Invalid username or password"}, 401)
