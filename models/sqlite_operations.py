@@ -41,3 +41,14 @@ def delete_user(username):
     ''', (username,))  # Delete the user with the given username
     conn.commit()  # Save changes
     conn.close()  # Close connection
+
+# VALIDATE: Check if username and password are correct
+def validate_user(username, password):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT * FROM users WHERE username = ? AND password = ?
+    ''', (username, password))
+    user = cursor.fetchone()
+    conn.close()
+    return user

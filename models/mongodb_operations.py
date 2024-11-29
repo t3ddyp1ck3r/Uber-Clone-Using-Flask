@@ -27,3 +27,35 @@ def update_driver_location(driver_id, new_location):
 def delete_driver(driver_id):
     db = get_mongo_connection()
     db.drivers.delete_one({"driver_id": driver_id})
+
+# CREATE: Add a new ride request
+def add_ride_request(user_id, pickup, dropoff):
+    db = get_mongo_connection()
+    db.rides.insert_one({
+        "user_id": user_id,
+        "pickup": pickup,
+        "dropoff": dropoff,
+        "status": "Pending",
+        "driver_id": None
+    })
+
+# UPDATE: Accept a ride
+def accept_ride(ride_id, driver_id):
+    db = get_mongo_connection()
+    db.rides.update_one(
+        {"_id": ride_id},
+        {"$set": {"status": "Accepted", "driver_id": driver_id}}
+    )
+
+# UPDATE: Complete a ride
+def complete_ride(ride_id):
+    db = get_mongo_connection()
+    db.rides.update_one(
+        {"_id": ride_id},
+        {"$set": {"status": "Completed"}}
+    )
+
+# READ: Get rides by status
+def get_rides_by_status(status):
+    db = get_mongo_connection()
+    return list(db.rides.find({"status": status}, {"_id": 0}))

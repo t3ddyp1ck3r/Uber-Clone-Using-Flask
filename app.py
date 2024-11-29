@@ -1,9 +1,12 @@
 from flask import Flask, jsonify
 from dotenv import load_dotenv
+from flask_session import Session
 import os
+
 from config import Config
 from routes.user import user_bp
 from routes.driver import driver_bp
+from routes.ride import ride_bp
 
 # Load .env variables
 load_dotenv()
@@ -11,12 +14,16 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load configuration from config.py
+# Load configuration from config.py (before initializing Session)
 app.config.from_object(Config)
+
+# Initialize session management
+Session(app)
 
 # Register blueprints
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(driver_bp, url_prefix='/driver')
+app.register_blueprint(ride_bp, url_prefix='/ride')
 
 # Home route
 @app.route('/')
