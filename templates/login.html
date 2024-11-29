@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+
+<!-- Display an error message if one exists -->
+{% if error %}
+<div style="color: red; margin-bottom: 1em;">
+    {{ error }}
+</div>
+{% endif %}
+
+<form action="/user/login" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    
+    <button type="submit">Login</button>
+</form>
+{% endblock %}

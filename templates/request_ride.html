@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Request a Ride{% endblock %}
+
+{% block content %}
+<h1>Request a Ride</h1>
+
+<!-- Display an error message if one exists -->
+{% if error %}
+<div style="color: red; margin-bottom: 1em;">
+    {{ error }}
+</div>
+
+{% endif %}
+<form action="/ride/request_ride" method="post">
+    <label for="pickup">Pickup Location:</label>
+    <input type="text" id="pickup" name="pickup" required>
+    <label for="dropoff">Dropoff Location:</label>
+    <input type="text" id="dropoff" name="dropoff" required>
+    <button type="submit">Request Ride</button>
+</form>
+{% endblock %}

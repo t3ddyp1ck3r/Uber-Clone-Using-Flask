@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect, render_template
 from models.sqlite_operations import add_user, get_user_by_username, update_user_email, delete_user, validate_user
 from flask import session
 
@@ -39,18 +39,19 @@ def delete_user_endpoint():
     delete_user(data['username'])  # Delete the user using the operation function
     return jsonify({"message": f"User {data['username']} deleted successfully!"})
 
-@user_bp.route('/login', methods=['POST'])
+@user_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    data = request.json
-    user = validate_user(data['username'], data['password'])
-    if user:
-        session['username'] = user[1]  # Store username in session
-        session['role'] = user[4]      # Store role in session
-        return jsonify({"message": f"Welcome back, {user[1]}!"})
-    else:
-        return jsonify({"error": "Invalid username or password"}), 401
+    if request.method == 'POST':
+        data = request.form
+        user = validate_user(data['username'], data['password'])
+        if user:
+            session['username'] = user[1]
+            return redirect('/')
+        else:
+            return render_template('login.html', error="Invalid credentials")
+    return render_template('login.html')
 
-@user_bp.route('/logout', methods=['POST'])
+@user_bp.route('/logout', methods=['GET'])
 def logout():
-    session.clear()  # Clear the session
-    return jsonify({"message": "Successfully logged out"})
+    session.clear()
+    return redirect('/')

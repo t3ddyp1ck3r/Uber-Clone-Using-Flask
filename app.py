@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from dotenv import load_dotenv
 from flask_session import Session
 import os
@@ -28,7 +28,7 @@ app.register_blueprint(ride_bp, url_prefix='/ride')
 # Home route
 @app.route('/')
 def home():
-    return jsonify({"message": "Welcome to the Uber Clone API!"})
+    return render_template('home.html')
 
 # Error handling
 @app.errorhandler(404)
